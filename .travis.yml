@@ -1,0 +1,30 @@
+install:
+  - sudo apt-get install -y g++ zlib1g-dev build-essential git python time gawk gettext unzip file libssl-dev wget gcc flex bison libz-dev libncurses-dev make
+  - sudo apt install -y ccache automake lzop gperf build-essential zip curl zlib1g-dev zlib1g-dev g++-multilib python-networkx libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng
+  
+language: java
+dist: trusty
+jdk:
+  - openjdk8
+- os: linux
+cache: ccache
+compiler:
+  - clang
+  - gcc
+addons:
+  apt:
+    update: true
+    sources:
+      - llvm-toolchain-trusty-5.0
+    packages:
+      - oracle-java8-installer
+      - clang-5.0
+env:
+  - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+  global:
+    - MAKEFLAGS="-j 2"
+sudo: false
+script:
+  - jdk_switcher use openjdk8
+  - while sleep 6m; do echo "=====[ $SECONDS seconds build still running ]====="; done &
+  - bash build-twrp.sh
